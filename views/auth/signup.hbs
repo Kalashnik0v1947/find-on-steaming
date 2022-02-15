@@ -1,0 +1,42 @@
+{{! views/auth/signup.hbs }}
+
+<div id="form">
+  <h2>Sign Up</h2>
+  <form action="/signup" method="POST">
+
+    <label>
+      Username
+      <input type="text" name="username" placeholder="username" />
+    </label>
+
+    <label>
+      Email
+      <input type="email" name="email" placeholder="email@address.com" />
+    </label>
+
+    <label>
+      Password
+      <input
+        type="password"
+        name="password"
+        placeholder="********"
+        id="myInput"
+      />
+      <input type="checkbox" onclick="showPassword()" />
+      Show Password
+
+    </label>
+
+    <button type="submit">Create account</button>
+
+    {{#if errorMessage}}
+    <p class="error">{{errorMessage}}</p>
+  {{/if}}
+  
+  </form>
+</div>
+
+<script>
+  function showPassword() { var x = document.getElementById("myInput"); if (x.type
+  === "password") { x.type = "text"; } else { x.type = "password"; } }
+</script>
