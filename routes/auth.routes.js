@@ -1,16 +1,51 @@
 const router = require("express").Router();
 const User = require("../models/User.model");
+var axios = require("axios").default;
+
+//middleware
+const { isLoggedIn, isLoggedOut } = require("../middleware/logged");
 
 // bcrypt and salt password hash
 const bcryptjs = require("bcryptjs");
 const saltRounds = 10;
 
+router.get("/search", isLoggedIn, (req, res) => {
+  var options = {
+    method: "GET",
+    url: "https://streaming-availability.p.rapidapi.com/search/basic",
+    params: {
+      country: "us",
+      service: "netflix",
+      type: "movie",
+      genre: "18",
+      page: "1",
+      keyword: req.query.search,
+      output_language: "en",
+      language: "en",
+    },
+    headers: {
+      "x-rapidapi-host": "streaming-availability.p.rapidapi.com",
+      "x-rapidapi-key": "d571306b21msh8091ffc03c46245p12f533jsna70288329bd9",
+    },
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      console.log(response.data);
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+
 // SignUp, add to database, and encrypt password
-router.get("/signup", (req, res) => {
+router.get("/signup", isLoggedOut, (req, res) => {
   res.render("auth/signup");
 });
 
-router.post("/signup", (req, res, next) => {
+router.post("/signup", isLoggedOut, (req, res, next) => {
   const { username, password, email } = req.body;
   if (!username || !email || !password) {
     res.render("auth/signup", {
@@ -21,12 +56,10 @@ router.post("/signup", (req, res, next) => {
   }
   const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
   if (!regex.test(password)) {
-    res
-      .status(500)
-      .render("auth/signup", {
-        errorMessage:
-          "Password needs to have at least 6 characters and must contain at least one number, one lowercase and one uppercase letter.",
-      });
+    res.status(500).render("auth/signup", {
+      errorMessage:
+        "Password needs to have at least 6 characters and must contain at least one number, one lowercase and one uppercase letter.",
+    });
     return;
   }
   bcryptjs
@@ -40,31 +73,24 @@ router.post("/signup", (req, res, next) => {
       });
     })
     .then((createdUser) => {
-      console.log("new user was created woo!!", createdUser);
-      res.render("user/user-profile");
+      console.log("new user was created", createdUser);
+      
       // session
       console.log(req.session);
       req.session.user = createdUser;
       console.log(req.session.user);
-      
+      res.redirect("/userProfile");
     })
     .catch((err) => console.log("ERROR CREATING USER", err));
-    // .catch((error) => {
-    //   if (error instanceof mongoose.Error.ValidationError) {
-    //     res.status(500).render("auth/signup", { errorMessage: error.message });
-    //   } else {
-    //     next(error);
-    //   }
-    // });
 });
 
 // Login Route
-router.get("/login", (req, res, next) => {
+router.get("/login", isLoggedOut, (req, res, next) => {
   res.render("auth/login");
 });
 
-router.post('/login', (req, res, next) => {
-  console.log('SESSION =====> ', req.session);
+router.post("/login", (req, res, next) => {
+  console.log("SESSION =====> ", req.session);
   const { email, password } = req.body;
 
   if (email === "" || password === "") {
@@ -73,40 +99,70 @@ router.post('/login', (req, res, next) => {
     });
     return;
   }
-
   User.findOne({ email })
-    .then(user => {
+    .then((user) => {
       if (!user) {
-        res.render('auth/login', { errorMessage: 'Email is not registered. Try with other email.' });
+        res.render("auth/login", {
+          errorMessage: "Email is not registered. Try with other email.",
+        });
         return;
       } else if (bcryptjs.compareSync(password, user.password)) {
-        // when we introduce session, the following line gets replaced with what follows:
-        // res.render('users/user-profile', { user });
- 
-        //******* SAVE THE USER IN THE SESSION ********//
         req.session.currentUser = user;
-        res.redirect('/userProfile');
+        res.redirect("/userProfile");
       } else {
-        res.render('auth/login', { errorMessage: 'Incorrect password.' });
+        res.render("auth/login", { errorMessage: "Incorrect password." });
       }
     })
-    .catch(error => next(error));
+    .catch((error) => next(error));
 });
 
-router.get('/userProfile', (req, res) => {
-  res.render('user/user-profile', { userInSession: req.session.currentUser });
+// User Profile
+router.get("/userProfile", isLoggedIn, (req, res) => {
+  res.render("user/user-profile", { userInSession: req.session.currentUser });
+});
+
+// Update user profile
+router.get("/userProfile/:id/edit", (req, res) => {
+  const userId = req.params.id;
+  User.findById(userId)
+    .then((user) => {
+      console.log(user);
+      res.render("user/edit-profile", { userInSession: user });
+    })
+    .catch((error) => next(error));
+});
+
+router.post("/userProfile/:id/edit", (req, res) => {
+  const updatedUser = req.body;
+  const userId = req.params.id;
+  User.findByIdAndUpdate(userId, updatedUser)
+    .then(() => {
+      res.redirect("/userProfile");
+    })
+    .catch((error) => next(error));
+});
+
+// Delete User
+router.post("/userProfile/:id/delete", (req, res)=> {
+  const updatedUser = req.body;
+  const userId = req.params.id;
+   User.findByIdAndDelete(userId, updatedUser)
+  .then(() => {
+    req.session.destroy((err) => {
+      if (err) next(err);
+      res.status(204).redirect("/auth/signup");
+    });
+  })
+  .catch((error) => next(error));
 });
 
 
-router.post('/logout', (req, res, next) => {
-  req.session.destroy(err => {
+// Logout and destroy session
+router.post("/logout", (req, res, next) => {
+  req.session.destroy((err) => {
     if (err) next(err);
-    res.redirect('/');
+    res.redirect("/");
   });
 });
 
-
 module.exports = router;
-
-
-// Password1

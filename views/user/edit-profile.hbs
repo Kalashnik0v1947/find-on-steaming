@@ -1,0 +1,29 @@
+<div id="form">
+  <h2>Update {{userInSession.username}}'s Profile</h2> 
+
+  <form action="/userProfile/{{userInSession._id}}/edit" method="POST">
+
+    <label>
+      Current Username
+      <input type="text" name="username" value="{{userInSession.username}}"/>
+    </label>
+
+    <label>
+      Current Email
+      <input type="email" name="email" value="{{userInSession.email}}"/>
+    </label>
+
+    
+
+    <button type="submit">Save changes</button>
+
+   
+
+    {{#if errorMessage}}
+    <p class="error">{{errorMessage}}</p>
+  {{/if}}
+  
+  </form>
+</div>
+
+
