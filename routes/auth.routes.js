@@ -10,7 +10,6 @@ const { isLoggedIn, isLoggedOut } = require("../middleware/logged");
 const bcryptjs = require("bcryptjs");
 const saltRounds = 10;
 
-
 // SignUp, add to database, and encrypt password
 router.get("/signup", isLoggedOut, (req, res) => {
   res.render("auth/signup");
@@ -45,12 +44,12 @@ router.post("/signup", isLoggedOut, (req, res, next) => {
     })
     .then((createdUser) => {
       console.log("new user was created", createdUser);
-      
+
       // session
       console.log(req.session);
-      req.session.user = createdUser;
-    
-      console.log(req.session.user);
+      req.session.currentUser = createdUser;
+
+      console.log(req.session.currentUser);
       res.redirect("/userProfile");
     })
     .catch((err) => console.log("ERROR CREATING USER", err));
@@ -61,7 +60,7 @@ router.get("/login", isLoggedOut, (req, res, next) => {
   res.render("auth/login");
 });
 
-router.post("/login",isLoggedOut, (req, res, next) => {
+router.post("/login", isLoggedOut, (req, res, next) => {
   console.log("SESSION =====> ", req.session);
   const { email, password } = req.body;
 
@@ -80,7 +79,7 @@ router.post("/login",isLoggedOut, (req, res, next) => {
         return;
       } else if (bcryptjs.compareSync(password, user.password)) {
         req.session.currentUser = user;
-        
+
         res.redirect("/userProfile");
       } else {
         res.render("auth/login", { errorMessage: "Incorrect password." });
@@ -94,15 +93,18 @@ router.post("/login",isLoggedOut, (req, res, next) => {
 //   res.render("user/user-profile", { userInSession: req.session.currentUser });
 // });
 
-
 router.get("/userProfile", (req, res, next) => {
-  User.findById(req.session.user)
+  console.log("this is the user", req.session.currentUser._id);
+  User.findById(req.session.currentUser._id)
     .then((currentUser) => {
       // res.render("user/user-profile", {userInSession: req.session.currentUser} )
-      Tweet.find({ creatorId: req.session.user })
+      Tweet.find({ creatorId: req.session.currentUser._id })
         .then((foundTweets) => {
           console.log("Found all of the tweets", foundTweets);
-          res.render("user/user-profile", {userInSession: req.session.currentUser,tweets: foundTweets });
+          res.render("user/user-profile", {
+            userInSession: req.session.currentUser,
+            tweets: foundTweets,
+          });
         })
         .catch((err) => {
           console.log("Something went wrong", err);
@@ -124,7 +126,7 @@ router.get("/userProfile/:id/edit", isLoggedIn, (req, res) => {
     .catch((error) => next(error));
 });
 
-router.post("/userProfile/:id/edit",isLoggedIn, (req, res) => {
+router.post("/userProfile/:id/edit", isLoggedIn, (req, res) => {
   const updatedUser = req.body;
   const userId = req.params.id;
   User.findByIdAndUpdate(userId, updatedUser)
@@ -135,40 +137,39 @@ router.post("/userProfile/:id/edit",isLoggedIn, (req, res) => {
 });
 
 // Delete User
-router.post("/userProfile/:id/delete",isLoggedIn, (req, res)=> {
+router.post("/userProfile/:id/delete", isLoggedIn, (req, res) => {
   const updatedUser = req.body;
   const userId = req.params.id;
-   User.findByIdAndDelete(userId, updatedUser)
-  .then(() => {
-    req.session.destroy((err) => {
-      if (err) next(err);
-      res.status(204).redirect("/auth/signup");
-    });
-  })
-  .catch((error) => next(error));
+  User.findByIdAndDelete(userId, updatedUser)
+    .then(() => {
+      req.session.destroy((err) => {
+        if (err) next(err);
+        res.status(204).redirect("/auth/signup");
+      });
+    })
+    .catch((error) => next(error));
 });
 
-
 // Logout and destroy session
-router.post("/logout",isLoggedIn, (req, res, next) => {
+router.post("/logout", isLoggedIn, (req, res, next) => {
   req.session.destroy((err) => {
     if (err) next(err);
     res.redirect("/");
   });
 });
 
-
 //This pulls up the create tweet form
-router.get("/create-tweet", isLoggedIn,(req, res, next) => {
+router.get("/create-tweet", isLoggedIn, (req, res, next) => {
   res.render("create-tweet");
 });
 
 //This saves a new tweet in the database
 router.post("/create-tweet", isLoggedIn, (req, res, next) => {
+  console.log("this is the session", req.session);
   Tweet.create({
     content: req.body.content,
     gif: req.body.gif,
-    creatorId:req.session.user._id,
+    creatorId: req.session.currentUser._id,
   })
     .then((newTweet) => {
       console.log("A new tweet was created", newTweet);
@@ -191,10 +192,5 @@ router.get("/all-tweets", isLoggedIn, (req, res) => {
       console.log("Something went wrong", err);
     });
 });
-
-
-
-
-
 
 module.exports = router;
