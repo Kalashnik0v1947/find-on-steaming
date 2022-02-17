@@ -61,7 +61,7 @@ router.get("/login", isLoggedOut, (req, res, next) => {
   res.render("auth/login");
 });
 
-router.post("/login", (req, res, next) => {
+router.post("/login",isLoggedOut, (req, res, next) => {
   console.log("SESSION =====> ", req.session);
   const { email, password } = req.body;
 
@@ -95,7 +95,7 @@ router.get("/userProfile", isLoggedIn, (req, res) => {
 });
 
 // Update user profile
-router.get("/userProfile/:id/edit", (req, res) => {
+router.get("/userProfile/:id/edit", isLoggedIn, (req, res) => {
   const userId = req.params.id;
   User.findById(userId)
     .then((user) => {
@@ -105,7 +105,7 @@ router.get("/userProfile/:id/edit", (req, res) => {
     .catch((error) => next(error));
 });
 
-router.post("/userProfile/:id/edit", (req, res) => {
+router.post("/userProfile/:id/edit",isLoggedIn, (req, res) => {
   const updatedUser = req.body;
   const userId = req.params.id;
   User.findByIdAndUpdate(userId, updatedUser)
@@ -116,7 +116,7 @@ router.post("/userProfile/:id/edit", (req, res) => {
 });
 
 // Delete User
-router.post("/userProfile/:id/delete", (req, res)=> {
+router.post("/userProfile/:id/delete",isLoggedIn, (req, res)=> {
   const updatedUser = req.body;
   const userId = req.params.id;
    User.findByIdAndDelete(userId, updatedUser)
@@ -131,7 +131,7 @@ router.post("/userProfile/:id/delete", (req, res)=> {
 
 
 // Logout and destroy session
-router.post("/logout", (req, res, next) => {
+router.post("/logout",isLoggedIn, (req, res, next) => {
   req.session.destroy((err) => {
     if (err) next(err);
     res.redirect("/");
@@ -140,16 +140,16 @@ router.post("/logout", (req, res, next) => {
 
 
 //This pulls up the create tweet form
-router.get("/create-tweet", (req, res, next) => {
+router.get("/create-tweet", isLoggedIn,(req, res, next) => {
   res.render("create-tweet");
 });
 
 //This saves a new tweet in the database
-router.post("/create-tweet", (req, res, next) => {
+router.post("/create-tweet", isLoggedIn, (req, res, next) => {
   Tweet.create({
     content: req.body.content,
     gif: req.body.gif,
-    // creatorId: req.session._id,
+    creatorId: req.session._id,
   })
     .then((newTweet) => {
       console.log("A new tweet was created", newTweet);
@@ -161,7 +161,7 @@ router.post("/create-tweet", (req, res, next) => {
 });
 
 //This pulls all tweets from a database
-router.get("/all-tweets", (req, res) => {
+router.get("/all-tweets", isLoggedIn, (req, res) => {
   Tweet.find()
     .populate("creatorId")
     .then((allTweets) => {

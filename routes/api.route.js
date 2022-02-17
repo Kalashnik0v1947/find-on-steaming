@@ -8,7 +8,7 @@ var giphy = require('giphy-api')();
 const { isLoggedIn, isLoggedOut } = require("../middleware/logged");
 
 
-router.get("/test", (req,res)=>{
+router.get("/test", isLoggedIn,(req,res)=>{
    
     // giphy.search('pokemon').then(function (results) {
     //     console.log("api test", results.data)
@@ -17,7 +17,7 @@ router.get("/test", (req,res)=>{
 })
 
 
-router.post("/test", (req,res)=>{
+router.post("/test", isLoggedIn,(req,res)=>{
    
     giphy.search(req.body.search).then(function (results) {
         console.log("api test", results.data)
