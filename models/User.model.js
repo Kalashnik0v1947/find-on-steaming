@@ -1,6 +1,6 @@
 // User Model/Schema
 
-const {Schema, model} = require("mongoose")
+const {Schema, model, Types} = require("mongoose")
 
 const userSchema = new Schema({
   username: {
@@ -20,7 +20,11 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: [true, 'Password is required.'],
-  }
+  },
+  tweet: [{
+    type: Types.ObjectId,
+    ref: "Tweet"
+  }]
 },
 {timestamp: true,}
 )

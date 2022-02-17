@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const User = require("../models/User.model");
+const Tweet = require("../models/Tweet.model");
 var axios = require("axios").default;
 
 //middleware
@@ -9,36 +10,6 @@ const { isLoggedIn, isLoggedOut } = require("../middleware/logged");
 const bcryptjs = require("bcryptjs");
 const saltRounds = 10;
 
-router.get("/search", isLoggedIn, (req, res) => {
-  var options = {
-    method: "GET",
-    url: "https://streaming-availability.p.rapidapi.com/search/basic",
-    params: {
-      country: "us",
-      service: "netflix",
-      type: "movie",
-      genre: "18",
-      page: "1",
-      keyword: req.query.search,
-      output_language: "en",
-      language: "en",
-    },
-    headers: {
-      "x-rapidapi-host": "streaming-availability.p.rapidapi.com",
-      "x-rapidapi-key": "d571306b21msh8091ffc03c46245p12f533jsna70288329bd9",
-    },
-  };
-
-  axios
-    .request(options)
-    .then(function (response) {
-      console.log(response.data);
-      res.json(response.data);
-    })
-    .catch(function (error) {
-      console.error(error);
-    });
-});
 
 // SignUp, add to database, and encrypt password
 router.get("/signup", isLoggedOut, (req, res) => {
@@ -78,6 +49,7 @@ router.post("/signup", isLoggedOut, (req, res, next) => {
       // session
       console.log(req.session);
       req.session.user = createdUser;
+    
       console.log(req.session.user);
       res.redirect("/userProfile");
     })
@@ -108,6 +80,7 @@ router.post("/login", (req, res, next) => {
         return;
       } else if (bcryptjs.compareSync(password, user.password)) {
         req.session.currentUser = user;
+        
         res.redirect("/userProfile");
       } else {
         res.render("auth/login", { errorMessage: "Incorrect password." });
@@ -164,5 +137,45 @@ router.post("/logout", (req, res, next) => {
     res.redirect("/");
   });
 });
+
+
+//This pulls up the create tweet form
+router.get("/create-tweet", (req, res, next) => {
+  res.render("create-tweet");
+});
+
+//This saves a new tweet in the database
+router.post("/create-tweet", isLoggedIn, (req, res, next) => {
+  Tweet.create({
+    title: req.body.title,
+    content: req.body.content,
+    creatorId: req.session._id,
+  })
+    .then((newTweet) => {
+      console.log("A new tweet was created", newTweet);
+      res.redirect("/all-tweets");
+    })
+    .catch((err) => {
+      console.log("Something went wrong", err);
+    });
+});
+
+//This pulls all tweets from a database
+router.get("/all-tweets", isLoggedIn,  (req, res) => {
+  Tweet.find()
+    .populate("creatorId")
+    .then((allTweets) => {
+      console.log("All tweets", allTweets);
+      res.render("all-tweets", { tweets: allTweets });
+    })
+    .catch((err) => {
+      console.log("Something went wrong", err);
+    });
+});
+
+
+
+
+
 
 module.exports = router;

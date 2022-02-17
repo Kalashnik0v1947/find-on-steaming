@@ -1,0 +1,16 @@
+<form action="/create-tweet" method="POST">
+  <label>
+    Tweet Title
+    <input type="text" name="title" value="test" />
+  </label>
+  <label>
+    Body
+    <input type="text" name="content" value="test" />
+  </label>
+
+  <button type="submit">Submit</button>
+</form>
+
+{{#if errorMessage}}
+  {{errorMessage}}
+{{/if}}
