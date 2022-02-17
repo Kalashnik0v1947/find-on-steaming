@@ -147,9 +147,9 @@ router.get("/create-tweet", (req, res, next) => {
 //This saves a new tweet in the database
 router.post("/create-tweet", isLoggedIn, (req, res, next) => {
   Tweet.create({
-    title: req.body.title,
     content: req.body.content,
-    creatorId: req.session._id,
+    gif: req.body.gif,
+    creatorId: req.session.user._id,
   })
     .then((newTweet) => {
       console.log("A new tweet was created", newTweet);

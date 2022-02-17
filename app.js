@@ -33,6 +33,9 @@ app.use("/", index);
 // Auth route requirement
 const authRouter = require("./routes/auth.routes");
 app.use("/", authRouter);
+// Auth route requirement
+const apiRouter = require("./routes/api.route");
+app.use("/", apiRouter);
 
 
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
