@@ -149,7 +149,7 @@ router.post("/create-tweet", isLoggedIn, (req, res, next) => {
   Tweet.create({
     content: req.body.content,
     gif: req.body.gif,
-    creatorId: req.session.user._id,
+    // creatorId: req.session._id,
   })
     .then((newTweet) => {
       console.log("A new tweet was created", newTweet);
