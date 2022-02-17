@@ -15,7 +15,7 @@ module.exports = app => {
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
-        maxAge: 6000 * 60 * 60 * 24
+        maxAge: 6000 * 60
       },
       store: MongoStore.create({
         mongoUrl: process.env.MONGODB_URL || "mongodb://localhost/find-on-streaming-app"
