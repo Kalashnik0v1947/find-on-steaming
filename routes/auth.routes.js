@@ -145,7 +145,7 @@ router.get("/create-tweet", (req, res, next) => {
 });
 
 //This saves a new tweet in the database
-router.post("/create-tweet", isLoggedIn, (req, res, next) => {
+router.post("/create-tweet", (req, res, next) => {
   Tweet.create({
     content: req.body.content,
     gif: req.body.gif,
@@ -161,7 +161,7 @@ router.post("/create-tweet", isLoggedIn, (req, res, next) => {
 });
 
 //This pulls all tweets from a database
-router.get("/all-tweets", isLoggedIn,  (req, res) => {
+router.get("/all-tweets", (req, res) => {
   Tweet.find()
     .populate("creatorId")
     .then((allTweets) => {
