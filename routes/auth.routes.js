@@ -90,8 +90,27 @@ router.post("/login",isLoggedOut, (req, res, next) => {
 });
 
 // User Profile
-router.get("/userProfile", isLoggedIn, (req, res) => {
-  res.render("user/user-profile", { userInSession: req.session.currentUser });
+// router.get("/userProfile", isLoggedIn, (req, res) => {
+//   res.render("user/user-profile", { userInSession: req.session.currentUser });
+// });
+
+
+router.get("/userProfile", (req, res, next) => {
+  User.findById(req.session.user)
+    .then((currentUser) => {
+      // res.render("user/user-profile", {userInSession: req.session.currentUser} )
+      Tweet.find({ creatorId: req.session.user })
+        .then((foundTweets) => {
+          console.log("Found all of the tweets", foundTweets);
+          res.render("user/user-profile", {userInSession: req.session.currentUser,tweets: foundTweets });
+        })
+        .catch((err) => {
+          console.log("Something went wrong", err);
+        });
+    })
+    .catch((err) => {
+      console.log("Something went wrong", err);
+    });
 });
 
 // Update user profile
@@ -149,7 +168,7 @@ router.post("/create-tweet", isLoggedIn, (req, res, next) => {
   Tweet.create({
     content: req.body.content,
     gif: req.body.gif,
-    creatorId: req.session._id,
+    creatorId:req.session.user._id,
   })
     .then((newTweet) => {
       console.log("A new tweet was created", newTweet);

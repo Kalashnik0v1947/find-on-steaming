@@ -15,7 +15,7 @@ module.exports = (app) => {
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         secure: process.env.NODE_ENV === "production",
         httpOnly: true,
-        maxAge: 6000 * 60,
+        maxAge: 6000 * 60 * 60,
       },
       store: MongoStore.create({
         mongoUrl:

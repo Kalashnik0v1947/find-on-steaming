@@ -1,10 +1,27 @@
 <h2>Very Poor Twitter feed</h2>
 
 {{#each tweets}}
-
-
-  <p>{{this.content}}</p>
-  <img src="{{this.gif}}"/>
+<div class="tweets">
   <a href="#">{{this.creatorId.username}}</a>
+  <p>{{this.content}}</p>
+  <img src="{{this.gif}}" />
+  <br />
+  </div>
+
 
 {{/each}}
+
+<style>
+  .tweets {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: space-around;
+	align-items: center;
+	align-content: space-evenly;
+}
+
+div {
+  border: .5px solid lightskyblue;
+}
+</style>

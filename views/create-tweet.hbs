@@ -24,8 +24,17 @@
 </form>
 
 {{#each gifs}}
-<img src={{this.images.fixed_height_small.url}}/>
+<img class="gif" src={{this.images.fixed_height_small.url}} />
+
 {{/each}}
+<script>
+
+let x = document.querySelector(".gif")
+console.log(x,"x")
+
+</script>
+
+
 {{#if errorMessage}}
   {{errorMessage}}
 {{/if}}
@@ -35,3 +44,5 @@
     text-align: center;
   }
 </style>
+
+
