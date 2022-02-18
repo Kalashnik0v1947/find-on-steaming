@@ -94,7 +94,7 @@
   position: relative;
   height: 560px;
   width: 405px;
-  margin: 10vh auto;
+  margin: 15vh auto;
   padding: 60px 60px;
   background: url("/images/shanty\ town\ login\ small.png") no-repeat   center center #505050;   
   background-size: cover;
@@ -244,14 +244,33 @@ hr {
   position: relative;
 }
 
-{{!-- a {
-  text-align: center;
-  display: block;
-  top: 120px;
-  position: relative;
-  text-decoration: none;
-  color: rgba(255, 255, 255, 0.7);
-} --}}
+
 </style>
 
+<div id="image">
+  <marquee behavior="scroll" direction="right">
+    <img id="tumbleweed" src="/images/tumblingTumblweed.png" alt="" />
+  </marquee>
+</div>
 
+<style>
+
+
+  #tumbleweed { 
+    height: 200px; 
+    width: 200px; 
+    animation-name: spin;
+    animation-duration: 6000ms; 
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out; 
+    } 
+    @keyframes spin { 
+      from {
+        transform:rotate(0deg); 
+        } 
+        to 
+        { 
+        transform:rotate(360deg); 
+        } 
+        }
+</style>
