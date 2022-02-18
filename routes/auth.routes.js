@@ -93,7 +93,7 @@ router.post("/login", isLoggedOut, (req, res, next) => {
 //   res.render("user/user-profile", { userInSession: req.session.currentUser });
 // });
 
-router.get("/userProfile", (req, res, next) => {
+router.get("/userProfile", isLoggedIn, (req, res, next) => {
   console.log("this is the user", req.session.currentUser._id);
   User.findById(req.session.currentUser._id)
     .then((currentUser) => {

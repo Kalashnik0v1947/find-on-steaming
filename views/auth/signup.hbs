@@ -1,4 +1,4 @@
-<div id="form">
+{{!-- <div id="form">
   <h2>Sign Up</h2>
   <form action="/signup" method="POST">
 
@@ -10,8 +10,8 @@
     <label>
       Email
       <input type="email" name="email" placeholder="email@address.com" />
-    </label>
-
+    </label> --}}
+{{!-- 
     <label>
       Password
       <input
@@ -23,69 +23,69 @@
       <input type="checkbox" onclick="showPassword()" />
       Show Password
 
-    </label>
+    </label> --}}
+{{!-- 
+    <button type="submit">Create account</button> --}}
 
-    <button type="submit">Create account</button>
+   
 
-    {{#if errorMessage}}
+  {{!-- </form>
+</div> --}}
+
+ {{#if errorMessage}}
       <p class="error">{{errorMessage}}</p>
     {{/if}}
 
-  </form>
-</div>
+<link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 
-<script>
-  function showPassword() { var x = document.getElementById("myInput"); if
-  (x.type === "password") { x.type = "text"; } else { x.type = "password"; } }
-</script>
-
-{{!-- <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
-
+<form action="/signup" method="POST"> 
 <div class="login">
+  
   <h2 class="active"> sign up </h2>
 
  
    
     
 
-    <input type="text" class="text" name="username">
+    <input type="text" class="text" name="username" placeholder="username">
      <span>username</span>
 
     <br>
     
     <br>
 
-    <input type="email" class="text" name="email">
+    <input type="email" class="text" name="email"placeholder="email@address.com">
     <span>email</span>
     <br>
     <br>
 
-    <input type="password" class="text" name="password">
+    <input type="password" class="text" name="password"placeholder="password">
     <span>password</span>
     <br>
 
-    <input type="checkbox" id="checkbox-1-1" class="custom-checkbox" />
-    <label for="checkbox-1-1">Keep me Signed in</label>
+
     
-    <button class="signin">
-      Sign up
+    <button type="submit" class="signin">
+      sign up
     </button>
 
 
     <hr>
 
-    <a href="#">Forgot Password?</a>
-  </form>
+
+ 
 
 </div>
+</form>
 
 
 <style>
+
   body,
 .signin {
-  background-color: #d3d3d3;
+  {{!-- background-color: #d3d3d3 --}}
   font-family: 'Montserrat', sans-serif;
-  color: #fff;
+  color: black;
   font-size: 14px;
   letter-spacing: 1px;
 }
@@ -96,7 +96,7 @@
   width: 405px;
   margin: auto;
   padding: 60px 60px;
-  background: url(https://images3.alphacoders.com/106/1065191.jpg) no-repeat   center center #505050;   
+  background: url(https://previews.dropbox.com/p/thumb/ABdc0PIndKRb-AS4W3sP5jTeV2In_H-S7TKZu_AndL3HOwNIJ8biYNzYd02tRXxWJseLz6cOvsmhOeXvOZc1y_az35A4Jooew7UqMSVJ0rJd7g4WcotUSq5JatFuemgxBTT-S2ouqDpJtx8tvQCVT6-eOWOZYn-x1ZbNrLeNFdAk9ShnJd7Sh9KcgTd20wIIU-QrIbAkghulqOllNW8xVKTi3n-SUkitjWE9zcbNh2f7FHstbPv5mfI9QLfS6_u9aF9Mpr11EpOIzjM83kJJkH3A436R_J7_9Ta6YAnuQVMT5tuk07ImwcHdzExreXIcQmi6jkBxUlE1r029uaoK0gRbRHrsSoQD1AGrjwcZBSpUYg/p.png) no-repeat   center center #505050;   
   background-size: cover;
   box-shadow: 0px 30px 60px -5px #000;
 }
@@ -128,7 +128,7 @@ h2:first-child {
 span {
   text-transform: uppercase;
   font-size: 12px;
-  opacity: 0.4; 
+  opacity: 0; 
   display: inline-block;
   position: relative;
   top: -65px;
@@ -142,8 +142,8 @@ span {
   display: block;
   height: 15px;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid rgba(255, 255, 255, 0);
+  background: rgba(255, 255, 255, .75);
+  border: 2px solid rgba(255, 255, 255, .75);
   overflow: hidden;
   margin-top: 15px;
   transition: all 0.5s ease-in-out;
@@ -151,7 +151,7 @@ span {
 
 .text:focus {
   outline: 0;
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.7);
   border-radius: 20px;
   background: rgba(0, 0, 0, 0);
 }
@@ -161,9 +161,10 @@ span {
 }
 
 input[type="text"],
+input[type="email"],
 input[type="password"] {
   font-family: 'Montserrat', sans-serif;
-  color: #fff;
+  color: black;
 }
 
 
@@ -182,7 +183,7 @@ span,
 
 .custom-checkbox {
   -webkit-appearance: none;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.5);
   padding: 8px;
   border-radius: 2px;
   display: inline-block;
@@ -238,17 +239,19 @@ label {
 }
 
 hr {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   top: 85px;
   position: relative;
 }
 
-a {
+{{!-- a {
   text-align: center;
   display: block;
   top: 120px;
   position: relative;
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.2);
-}
-</style> --}}
+  color: rgba(255, 255, 255, 0.7);
+} --}}
+</style>
+
+
