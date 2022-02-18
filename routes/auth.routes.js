@@ -123,7 +123,7 @@ router.get("/userProfile/:id", isLoggedIn, (req, res) => {
     Tweet.find({creatorId: user._id})
     .populate("creatorId")
     .then((foundTweets)=>{
-      res.render("user/users-tweets", { foundTweets: foundTweets});
+      res.render("user/users-tweets", { foundTweets: foundTweets, user: user});
     })
      
     })

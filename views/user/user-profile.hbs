@@ -1,13 +1,14 @@
 {{#if userInSession}}
   <h2>Welcome, {{userInSession.username}}!</h2>
 
-
+<div id="tweets">
 {{#each tweets}}
 
   <p>{{this.content}}</p>
 <img src="{{this.gif}}" />
 
 {{/each}}
+<div id="tweets">
 
 
   <div>  <form id="logout-form" action="/userProfile/{{userInSession._id}}/edit" , method="GET">
@@ -15,14 +16,58 @@
   </form>
    
   <form id="logout-form" action="/userProfile/{{userInSession._id}}/delete" method="post">
-    <button type="submit">delete account</button>
+    <button type="submit">Delete Account</button>
   </form>
    <form id="logout-form" action="/logout" method="POST">
-    <button>Logout</button>
+    <button>Log Out</button>
   </form>
   </div>
 
 {{else}}
   <p>Still no logged in user, sorry!</p>
 {{/if}}
+
+<div id="image">
+    <marquee behavior="scroll" direction="right">
+      <img id="tumbleweed" src="/images/tumblingTumblweed.png" alt="">
+    </marquee>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css?family=Quicksand:400,500,700');
+
+h2 {
+  padding-top: 10%;
+  text-align: center;
+font-size: 28px;
+ box-sizing: border-box;
+    font-family: "Quicksand", sans-serif;
+}
+#tweets{
+  
+  text-align: center;
+
+  box-sizing: border-box;
+}
+
+
+#tumbleweed {
+  margin-top: 40%;
+  height: 200px;
+  width: 200px;
+  animation-name: spin;
+  animation-duration: 6000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out; 
+}
+
+@keyframes spin {
+  from {
+      transform:rotate(0deg);
+  }
+  to {
+      transform:rotate(360deg);
+  }
+}
+</style>
 
