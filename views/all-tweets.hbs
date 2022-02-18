@@ -2,7 +2,7 @@
 
 {{#each tweets}}
 <div class="tweets">
-  <a href="#">{{this.creatorId.username}}</a>
+  <a href="/userProfile/{{this.creatorId._id}}">{{this.creatorId.username}}</a>
   <p>{{this.content}}</p>
   <img src="{{this.gif}}" />
   <br />
@@ -10,4 +10,12 @@
 
 
 {{/each}}
+
+
+<style>
+
+  html{
+    align-items: center;
+  }
+</style>
 

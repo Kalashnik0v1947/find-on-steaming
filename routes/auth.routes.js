@@ -115,6 +115,21 @@ router.get("/userProfile", isLoggedIn, (req, res, next) => {
     });
 });
 
+// View All User Tweets
+router.get("/userProfile/:id", isLoggedIn, (req, res) => {
+  const userId = req.params.id;
+  User.findById(userId)
+    .then((user) => {
+    Tweet.find({creatorId: user._id})
+    .populate("creatorId")
+    .then((foundTweets)=>{
+      res.render("user/users-tweets", { foundTweets: foundTweets});
+    })
+     
+    })
+    .catch((error) => next(error));
+});
+
 // Update user profile
 router.get("/userProfile/:id/edit", isLoggedIn, (req, res) => {
   const userId = req.params.id;

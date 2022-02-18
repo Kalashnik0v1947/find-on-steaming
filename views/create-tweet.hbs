@@ -1,26 +1,37 @@
+<div id="create-tweet">
 <form action="/create-tweet" method="POST">
 
   <label>
     Tweet Body
-    <input type="text" name="content" />
+    <br/>
+    <input class="tweet-body" type="text" name="content" />
   </label>
+  <br/>
   <label>
     Gif Link
+    <br/>
     <input type="text" name="gif" id="gif-link" />
   </label>
-
+<br/>
   <button type="submit">Submit</button>
 </form>
 
-<h2>GIFs</h2>
+ <label>GIFs
 
 <form action="/test" method="POST">
 
   <input name="search" />
-
+<br/>
   <button type="submit">search</button>
-
+</label>
 </form>
+</div>
+
+ <div id="image">
+    <marquee behavior="scroll" direction="right">
+      <img id="tumbleweed" src="/images/tumblingTumblweed.png" alt="">
+    </marquee>
+</div>
 
 {{#each gifs}}
   <img class="gif" src={{this.images.fixed_height_small.url}} />
@@ -39,11 +50,47 @@
 
 
 <style>
+label{
+  font-size: 18px;
 
-body {
-    text-align: center;
 }
-form {
-    display: inline-block;
+
+.tweet-body{
+width: 350px;
+height: 125px;
+padding: 12px 20px;
+box-sizing: border-box;
+}
+
+#create-tweet {
+ padding-top: 10%;
+ padding-left: 45%;
+}
+
+html{
+  background-image: url("/images/shantytownBG.png");
+  background-repeat: no-repeat;
+  background-position: 50% 0;
+  background-size: cover;
+  
+}
+
+#tumbleweed {
+  margin-top: 40%;
+  height: 200px;
+  width: 200px;
+  animation-name: spin;
+  animation-duration: 6000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out; 
+}
+
+@keyframes spin {
+  from {
+      transform:rotate(0deg);
+  }
+  to {
+      transform:rotate(360deg);
+  }
 }
 </style>

@@ -23,7 +23,7 @@ require("./config/index")(app);
 require("./config/session.config")(app);
 
 // default value for title local
-const projectName = "Find On Streaming";
+const projectName = "Shanty Town Twitter";
 app.locals.title = `${projectName}`;
 
 // 👇 Start handling routes here
