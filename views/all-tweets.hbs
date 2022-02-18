@@ -1,11 +1,15 @@
 <h2>SHANTY TOWN TWITTER FEED</h2>
 
+
 {{#each tweets}}
 <div id="tweets">
-  <a href="/userProfile/{{this.creatorId._id}}">{{this.creatorId.username}}</a>
+    <br />
+  <a id="users" href="/userProfile/{{this.creatorId._id}}">{{this.creatorId.username}}</a>
   <p>{{this.content}}</p>
   <img src="{{this.gif}}" />
   <br />
+    <br />
+ 
   </div>
 
 
@@ -28,12 +32,27 @@ font-size: 28px;
     font-family: "Quicksand", sans-serif;
 }
 #tweets{
-  
   text-align: center;
+  font-size: 16px;
+  width: 300px;
+  border: 1px solid  #e6af76;
+margin-left: 45%;
 
-  box-sizing: border-box;
 }
 
+#users {
+  
+  color: black;
+  border-radius: 25px;
+  background:  #e6af76;
+ padding: 2px;
+ text-decoration: none;
+ 
+}
+#users:hover {
+  font-size: 125%;
+  color:#cc7e74;
+}
 
 #tumbleweed {
   margin-top: 40%;
